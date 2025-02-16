@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cosas Bonitas para Mari</title>
+  <style>
+    /* Fondo rosado y estilos generales */
+    body {
+      margin: 0;
+      padding: 0;
+      background: #FFC0CB; /* Rosado */
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      position: relative;
+    }
+    /* Canvas a pantalla completa */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+    /* Contenedor para las frases */
+    #message {
+      position: relative;
+      z-index: 2;
+      font-size: 2rem;
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      animation: fadeInOut 6s infinite;
+    }
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0; }
+      20%, 80% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas para animar corazones -->
+  <canvas id="canvas"></canvas>
+  
+  <!-- Div con las frases -->
+  <div id="message"></div>
+  
+  <script>
+    // Configurar el canvas
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+    
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+    
+    // Función para dibujar un corazón en el canvas usando curvas Bézier
+    function drawHeart(ctx, x, y, size, color) {
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.bezierCurveTo(x, y - size/2, x - size, y - size/2, x - size, y);
+      ctx.bezierCurveTo(x - size, y + size/2, x, y + size, x, y + size * 1.5);
+      ctx.bezierCurveTo(x, y + size, x + size, y + size/2, x + size, y);
+      ctx.bezierCurveTo(x + size, y - size/2, x, y - size/2, x, y);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+    
+    // Crear un array de corazones con propiedades aleatorias
+    const hearts = [];
+    const numHearts = 30;
+    for (let i = 0; i < numHearts; i++) {
+      hearts.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        dx: (Math.random() - 0.5) * 2,
+        dy: (Math.random() - 0.5) * 2,
+        size: Math.random() * 20 + 10,
+        color: `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.3})`
+      });
+    }
+    
+    // Animar los corazones
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      hearts.forEach(heart => {
+        drawHeart(ctx, heart.x, heart.y, heart.size, heart.color);
+        heart.x += heart.dx;
+        heart.y += heart.dy;
+        // Rebotar en los bordes
+        if (heart.x < 0 || heart.x > width) heart.dx *= -1;
+        if (heart.y < 0 || heart.y > height) heart.dy *= -1;
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+    
+    // Array de frases sencillas y cotidianas
+    const phrases = [
+      "Tu sonrisa ilumina el día.",
+      "Me gusta cómo te expresas.",
+      "Tienes un gran sentido del humor.",
+      "Disfruto pasar tiempo contigo.",
+      "Mari la blanquita mas linda"
+    ];
+    
+    const messageDiv = document.getElementById('message');
+    let currentPhrase = 0;
+    
+    // Función para cambiar el mensaje
+    function changePhrase() {
+      messageDiv.textContent = phrases[currentPhrase];
+      currentPhrase = (currentPhrase + 1) % phrases.length;
+    }
+    // Inicia el primer mensaje y cambia cada 5 segundos
+    changePhrase();
+    setInterval(changePhrase, 5000);
+  </script>
+</body>
+</html>

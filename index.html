@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <title>Cosas Bonitas para Mari</title>
   <style>
-    /* Fondo rosado y estilos generales */
     body {
       margin: 0;
       padding: 0;
@@ -19,14 +18,12 @@
       height: 100vh;
       position: relative;
     }
-    /* Canvas a pantalla completa */
     canvas {
       position: fixed;
       top: 0;
       left: 0;
       z-index: 1;
     }
-    /* Contenedor para las frases */
     #message {
       position: relative;
       z-index: 2;
@@ -41,6 +38,23 @@
       0%, 100% { opacity: 0; }
       20%, 80% { opacity: 1; }
     }
+    /* Estilos del botón */
+    #playButton {
+      position: relative;
+      z-index: 3;
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1.5rem;
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    #playButton:hover {
+      background-color: #ff1493;
+    }
   </style>
 </head>
 <body>
@@ -49,20 +63,29 @@
   
   <!-- Div con las frases -->
   <div id="message"></div>
-  
+
+  <!-- Botón para reproducir la música -->
+  <button id="playButton">💖 Reproducir Música</button>
+
+  <!-- Audio -->
+  <audio id="background-music" loop>
+    <source src="tu-cancion.mp3" type="audio/mpeg">
+    Tu navegador no soporta el audio.
+  </audio>
+
   <script>
     // Configurar el canvas
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
-    
+
     window.addEventListener('resize', () => {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
     });
-    
-    // Función para dibujar un corazón en el canvas usando curvas Bézier
+
+    // Función para dibujar un corazón
     function drawHeart(ctx, x, y, size, color) {
       ctx.beginPath();
       ctx.moveTo(x, y);
@@ -74,8 +97,8 @@
       ctx.fillStyle = color;
       ctx.fill();
     }
-    
-    // Crear un array de corazones con propiedades aleatorias
+
+    // Animación de corazones
     const hearts = [];
     const numHearts = 30;
     for (let i = 0; i < numHearts; i++) {
@@ -88,42 +111,53 @@
         color: `rgba(255, 255, 255, ${Math.random() * 0.5 + 0.3})`
       });
     }
-    
-    // Animar los corazones
+
     function animate() {
       ctx.clearRect(0, 0, width, height);
       hearts.forEach(heart => {
         drawHeart(ctx, heart.x, heart.y, heart.size, heart.color);
         heart.x += heart.dx;
         heart.y += heart.dy;
-        // Rebotar en los bordes
         if (heart.x < 0 || heart.x > width) heart.dx *= -1;
         if (heart.y < 0 || heart.y > height) heart.dy *= -1;
       });
       requestAnimationFrame(animate);
     }
     animate();
-    
-    // Array de frases sencillas y cotidianas
+
+    // Frases bonitas
     const phrases = [
-      "Me gusta mucho conocerte .",
-      "Esa carita suya es muy linda.",
-      "Mañana te voy a ver bien lindo.",
-      "Disfruto pasar tiempo contigo.",
-      "Mari la psicologa de la nueva."
+      "LA ENERGIA NO MIENTE.",
+      "SOLO CON PALABRAS YA SENTI CONEXIÓN .",
+      "SIGUE MIRANDOME ASI",
+      "QUIERO SABER MAS DE TI.",
+      "ENCAJAMOS A LA PERFECCIÓN."
     ];
-    
+
     const messageDiv = document.getElementById('message');
     let currentPhrase = 0;
-    
-    // Función para cambiar el mensaje
+
     function changePhrase() {
       messageDiv.textContent = phrases[currentPhrase];
       currentPhrase = (currentPhrase + 1) % phrases.length;
     }
-    // Inicia el primer mensaje y cambia cada 5 segundos
     changePhrase();
     setInterval(changePhrase, 5000);
+
+    // Música con botón de reproducción
+    const playButton = document.getElementById('playButton');
+    const audio = document.getElementById('background-music');
+
+    playButton.addEventListener('click', () => {
+      if (audio.paused) {
+        audio.volume = 0.5;
+        audio.play();
+        playButton.textContent = "⏸ Pausar Música";
+      } else {
+        audio.pause();
+        playButton.textContent = "💖 Reproducir Música";
+      }
+    });
   </script>
 </body>
 </html>

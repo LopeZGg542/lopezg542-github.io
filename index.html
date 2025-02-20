@@ -1,8 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cosas Bonitas para Mari</title>
   <style>
     * {
@@ -19,9 +19,10 @@
       color: white;
       justify-content: center;
       align-items: center;
+      padding: 10px;
     }
     .player {
-      width: 90%;
+      width: 100%;
       max-width: 400px;
       background: #282828;
       border-radius: 10px;
@@ -40,6 +41,7 @@
       width: 100%;
       border-radius: 10px;
       margin-bottom: 15px;
+      max-height: 500px;
     }
     .song-info {
       text-align: center;
@@ -95,10 +97,9 @@
       color: #ff69b4;
     }
     .content {
-      position: absolute;
-      bottom: -50px;
       text-align: center;
       width: 100%;
+      padding-top: 20px;
     }
     #message {
       font-size: 1.2rem;
@@ -127,7 +128,7 @@
 <body>
   <div class="player">
     <div class="title">SoundMari</div>
-    <video class="album-cover" id="albumCover" autoplay loop muted>
+    <video class="album-cover" id="albumCover" autoplay loop muted playsinline>
       <source src="tu-video.mp4" type="video/mp4">
       Tu navegador no soporta videos.
     </video>
@@ -148,7 +149,7 @@
   </div>
 
   <div class="content">
-    <div id="message"></div>
+    <div id="message">Cada día contigo me encantas más <span class="heart">❤</span></div>
   </div>
 
   <script>
@@ -159,7 +160,7 @@
     playButton.addEventListener('click', () => {
       if (audio.paused) {
         audio.play();
-        albumCover.play(); // Intenta reproducir el video también
+        albumCover.play();
         playButton.textContent = "⏸";
       } else {
         audio.pause();

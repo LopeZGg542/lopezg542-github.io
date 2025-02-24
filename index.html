@@ -2,7 +2,6 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cosas Bonitas para Mari</title>
   <style>
     * {
@@ -19,10 +18,26 @@
       color: white;
       justify-content: center;
       align-items: center;
+      transition: background 0.3s ease;
+    }
+    .menu {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #282828;
       padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    }
+    .menu a {
+      color: white;
+      text-decoration: none;
+      margin-right: 15px;
+      font-size: 1rem;
+      cursor: pointer;
     }
     .player {
-      width: 100%;
+      width: 90%;
       max-width: 400px;
       background: #282828;
       border-radius: 10px;
@@ -31,44 +46,16 @@
       flex-direction: column;
       align-items: center;
       position: relative;
+      box-shadow: 0 0 15px rgba(255, 105, 180, 0.5);
+      transition: all 0.5s ease;
     }
-    .title {
-      font-size: 1.8rem;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .album-cover {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 15px;
-      max-height: 500px;
+    .small-player {
+      width: 200px;
+      padding: 10px;
     }
     .song-info {
       text-align: center;
       margin-bottom: 15px;
-    }
-    .song-title {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
-    .artist {
-      font-size: 1rem;
-      color: #b3b3b3;
-    }
-    .progress-bar {
-      width: 100%;
-      height: 5px;
-      background: #404040;
-      margin-top: 10px;
-      position: relative;
-      border-radius: 5px;
-    }
-    .progress {
-      width: 0%;
-      height: 100%;
-      background: #ff69b4;
-      position: absolute;
-      border-radius: 5px;
     }
     .controls {
       display: flex;
@@ -82,113 +69,168 @@
       color: white;
       font-size: 2.5rem;
       cursor: pointer;
+      transition: color 0.3s;
     }
     .controls button:hover {
       color: #ff69b4;
+      text-shadow: 0 0 10px #ff69b4;
     }
-    .like-button {
-      font-size: 2rem;
-      color: white;
+    .notes {
+      display: none;
+      font-size: 1.5rem;
+      margin-top: 20px;
+      text-align: center;
+    }
+    .playlist {
+      display: none;
+      background: #333;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    .playlist ul {
+      list-style: none;
+    }
+    .playlist li {
+      padding: 8px;
       cursor: pointer;
-      background: none;
-      border: none;
     }
-    .like-button.liked {
+    .playlist li:hover {
+      background: #444;
       color: #ff69b4;
     }
-    .content {
-      text-align: center;
+    .video-container {
+      margin-top: 15px;
       width: 100%;
-      padding-top: 20px;
-    }
-    #message {
-      font-size: 1.2rem;
-      background: rgba(255, 105, 180, 0.3);
-      padding: 12px;
-      border-radius: 20px;
-      width: 90%;
-      margin: auto;
-      animation: fadeInOut 6s infinite;
-      text-align: center;
       display: flex;
-      align-items: center;
       justify-content: center;
     }
-    .heart {
-      font-size: 1.5rem;
-      margin: 0 5px;
-      color: #ff69b4;
-    }
-    @keyframes fadeInOut {
-      0%, 100% { opacity: 0; }
-      20%, 80% { opacity: 1; }
+    video {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="player">
+  <nav class="menu">
+    <a href="#" id="notasBtn">NOTAS</a>
+    <a href="#" id="playlistBtn">PLAYLIST</a>
+  </nav>
+
+  <div class="player" id="player">
     <div class="title">SoundMari</div>
-    <video class="album-cover" id="albumCover" autoplay loop muted playsinline>
-      <source src="tu-video.mp4" type="video/mp4">
-      Tu navegador no soporta videos.
-    </video>
-    <div class="song-info">
-      <div class="song-title" id="songTitle">Mensaje de Texto</div>
-      <div class="artist" id="songArtist">Big Soto</div>
-      <div class="progress-bar">
-        <div class="progress" id="progress"></div>
-      </div>
+    <audio id="background-music"></audio>
+    <div class="song-info" id="songInfo">
+      <div class="song-title" id="songTitle">12x3 Remix</div>
+      <div class="artist" id="songArtist">DEKKO, Micro TDH, Rusherking</div>
     </div>
     <div class="controls">
+      <button id="prevButton">⏮</button>
       <button id="playButton">▶</button>
-      <button class="like-button" id="likeButton">❤</button>
+      <button id="nextButton">⏭</button>
+      <button id="shuffleButton">🔀</button>
     </div>
-    <audio id="background-music" ontimeupdate="updateProgress()">
-      <source src="serotonina.mp3" type="audio/mpeg">
-    </audio>
+    <div class="video-container">
+      <video id="videoPlayer" controls></video>
+    </div>
   </div>
 
-  <div class="content">
-    <div id="message"></div>
+  <div class="notes" id="notes">
+    -DESEO VERTE TODO EL TIEMPO <br>
+    ========================================== <br> 
+    -TE QUIERO SOLO PARA MI <br>
+    -ME GUSTAS DEMASIADO  ❤  <br>
+    ========================================== <br>
+    -TU TIENES TODO LO QUE ME PONE FELIZ <br>
+    ========================================== <br>
+    -YA QUIERO COGER ESA CINTURITA Y BESARTE <br>
+  </div>
+
+  <div class="playlist" id="playlist">
+    <ul>
+      <li onclick="changeSong(0)">12x3 Remix - DEKKO</li>
+      <li onclick="changeSong(1)">Otra Canción - Artista Desconocido</li>
+      <li onclick="changeSong(2)">Melodía Especial - Cantante X</li>
+    </ul>
   </div>
 
   <script>
-    const messages = [
-      "Me enseñaste el mejor spot",
-      "Estar contigo <span class='heart'>❤</span> me encanta",
-      "El tiempo no se siente contigo",
-      "Me encanta poder darle besitos en el cuello<span class='heart'>❤</span>",
-      "Me gusta hablar contigo de lo que sea"
+    const audio = document.getElementById("background-music");
+    const videoPlayer = document.getElementById("videoPlayer");
+    const playButton = document.getElementById("playButton");
+    const nextButton = document.getElementById("nextButton");
+    const prevButton = document.getElementById("prevButton");
+    const shuffleButton = document.getElementById("shuffleButton");
+    const player = document.getElementById("player");
+    const notes = document.getElementById("notes");
+    const playlist = document.getElementById("playlist");
+
+    let currentSongIndex = 0;
+    
+    const songs = [
+      { src: "cancion1.mp3", title: "12x3 Remix", artist: "DEKKO, Micro TDH, Rusherking", video: "video1.mp4" },
+      { src: "cancion2.mp3", title: "Aquí Estoy Yo", artist: "Xavi", video: "video2.mp4" },
+      { src: "cancion3.mp3", title: "UKIYO", artist: "Micro TDH", video: "video3.mp4" }
     ];
-    let messageIndex = 0;
-    const messageDiv = document.getElementById('message');
 
-    function changeMessage() {
-      messageDiv.innerHTML = messages[messageIndex];
-      messageIndex = (messageIndex + 1) % messages.length;
+    function changeSong(index) {
+      currentSongIndex = index;
+      audio.src = songs[index].src;
+      videoPlayer.src = songs[index].video;
+      videoPlayer.muted = true;  // Silenciar video
+      videoPlayer.loop = true;   // Repetir video
+      document.getElementById("songTitle").textContent = songs[index].title;
+      document.getElementById("songArtist").textContent = songs[index].artist;
+      audio.play();
+      videoPlayer.play();
+      playButton.textContent = "⏸";
     }
-    setInterval(changeMessage, 6000);
-    changeMessage();
 
-    const audio = document.getElementById('background-music');
-    const playButton = document.getElementById('playButton');
-    const albumCover = document.getElementById('albumCover');
-
-    playButton.addEventListener('click', () => {
+    playButton.addEventListener("click", () => {
       if (audio.paused) {
         audio.play();
-        albumCover.play();
+        videoPlayer.play();
         playButton.textContent = "⏸";
       } else {
         audio.pause();
-        albumCover.pause();
+        videoPlayer.pause();
         playButton.textContent = "▶";
       }
     });
 
-    albumCover.addEventListener('click', () => {
-      albumCover.play();
+    nextButton.addEventListener("click", () => {
+      currentSongIndex = (currentSongIndex + 1) % songs.length;
+      changeSong(currentSongIndex);
     });
+
+    prevButton.addEventListener("click", () => {
+      currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+      changeSong(currentSongIndex);
+    });
+
+    shuffleButton.addEventListener("click", () => {
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * songs.length);
+      } while (randomIndex === currentSongIndex);
+      changeSong(randomIndex);
+    });
+
+    document.getElementById("notasBtn").addEventListener("click", () => {
+      player.classList.add("small-player");
+      notes.style.display = "block";
+      playlist.style.display = "none";
+    });
+
+    document.getElementById("playlistBtn").addEventListener("click", () => {
+      player.classList.remove("small-player");
+      notes.style.display = "none";
+      playlist.style.display = "block";
+    });
+
+    changeSong(currentSongIndex);
   </script>
 </body>
 </html>
+
